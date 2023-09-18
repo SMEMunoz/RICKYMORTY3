@@ -7,8 +7,7 @@ export default function Nav(props){
     const {onSearch}=props
 
     return(<div>
-        <div> 
-        // Crea un botón en tu Nav con el texto "Favorites" que te redirija a esta ruta.
+        <div>
         <Link to="/favorites"><button>Favorites</button></Link>
         <Link to="/home"><button>Home</button></Link>
         <Link to="/about"><button>About</button></Link>

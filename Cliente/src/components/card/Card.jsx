@@ -1,39 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { addFav, removeFav } from "../../redux/actions";
 import {connect} from "react-redux";
-import { useDispatch } from 'react-redux';
-
-// ¡Ahora crearemos un botón para agregar y eliminar a nuestros personajes de los favoritos!
-
-// Conecta esta función con tu componente y recibe ambas funciones despachadoras por props.
-
-// Crea un estado local en tu componente con el nombre isFav e inicialízalo en false.
-
-// Crea una función en el cuerpo del componente llamada handleFavorite. 
-//Esta función estará dividida en dos partes:
-
-// Si el estado isFav es true, entonces settea ese estado en false, y 
-//despacha la función removeFav que recibiste por props pasándole el id del personaje como argumento.
-// Si el estado isFav es false, entonces settea ese estado en true, y 
-//despacha la función addFav que recibiste por props, pasándole props como argumento.
-
-
+import Cards from '../cards/Cards';
 
 export function Card(props) {
-    const { onClose, character, myFavorites } = props;
-    const dispatch = useDispatch()
+    const { onClose, character, myFavorites, addFav, removeFav } = props;
+    const {name, status, species, gender, origin, image, id} = character
 
     const [isFav, setIsFav] = useState(false)
 
     const handleFavorite = (data) => {
       if (isFav) {
         setIsFav(false)
-        dispatch(removeFav(data))
+        removeFav(data)
       }
       else {
         setIsFav(true)
-        dispatch(addFav(data))
+        addFav(data)
     }}
 
     useEffect(() => {
@@ -49,33 +33,29 @@ export function Card(props) {
       <div>
                 {
           isFav ? (
-              <button onClick={()=>handleFavorite(character.id)}>❤️</button>
+              <button onClick={()=>handleFavorite(id)}>❤️</button>
           ) : (
               <button onClick={()=>handleFavorite(character)}>🤍</button>
           )
         }
-        <button onClick={() => onClose(character.id)}>X</button>
-        <Link to={`/detail/${character.id}`}>
-          <h2>{character.name}</h2>
+        <button onClick={() => onClose(id)}>X</button>
+        <Link to={`/detail/${id}`}>
+          <h2>{name}</h2>
         </Link>
-        <h2>status: {character.status}</h2>
-        <h2>species: {character.species}</h2>
-        <h2>gender: {character.gender}</h2>
-        <h2>origin: {character.origin.name}</h2>
-        <img src={character.image} alt='' />
+        <h2>status: {status}</h2>
+        <h2>species: {species}</h2>
+        <h2>gender: {gender}</h2>
+        <h2>origin: {origin.name}</h2>
+        <img src={image} alt='' />
       </div>
     );
   }
+const mapDispatchToProps = (dispatch) => {
+    return {addFav: (character) => dispatch(addFav(character)),
+    removeFav: (id) => dispatch(removeFav(id))
+}}
 
-  //Aquí deberás crear una función mapDispatchToProps que contenga dos funciones. 
-//Esta debe despachar las dos actions que creaste anteriormente (por lo que deberás importarlas).
-
-export function mapDispatchToProps(dispatch) {
-  dispatch(addFav)
-  dispatch(removeFav)
-}
-
-export function mapStateToProps(state) {
+function mapStateToProps(state) {
   return {
     myFavorites: state.myFavorites
   }
